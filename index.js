@@ -9,6 +9,7 @@ var num;
 var temp;
 var personalBest = 0;
 var score;
+var tempArray;
 
 
 $("h1").click("event", function(event) {
@@ -33,10 +34,9 @@ function startGame() {
         box = $(this).attr("id");
         animate(box,userpattern,pattern);
 
-        //check patterns
-        if ((userpattern.length==pattern.length)&&(JSON.stringify(pattern)===JSON.stringify(userpattern))) {
+        //deside gaameover or continue
+        if ((patternsMatch(pattern,userpattern))&&(pattern.length==userpattern.length)) {
             console.log("correct!");
-            console.log(pattern,userpattern);
             round++;
             if (round==6) {
                 level++;
@@ -48,7 +48,7 @@ function startGame() {
             setTimeout(() => {
                 animateRandom(pattern);
             }, 500);
-        } else if ((userpattern.length==pattern.length)&&(JSON.stringify(pattern)!==JSON.stringify(userpattern))) {
+        } else if (patternsMatch(pattern,userpattern)==false) {
             console.log("GameOver!");
             gameOver(level,round,score);
         }
@@ -56,7 +56,7 @@ function startGame() {
 
 }
 
-//animate
+//animate random
 function animateRandom(pattern) {
     num = Math.floor(Math.random()*4);
     box = colors[num];
@@ -90,6 +90,7 @@ function animate(box,userpattern) {
     userpattern.push(box);
 }
 
+//gameOver
 function gameOver(level,round,score) {
     $("h1").text("Game Over. Click here to try again");
     var death = new Audio("./sounds/wrong.mp3");
@@ -111,4 +112,20 @@ function gameOver(level,round,score) {
     }
 
     $(".card").off()
+}
+
+function patternsMatch(pattern,userpattern) {
+    tempArray = pattern.slice(0,userpattern.length);
+    console.log("pattern: "+pattern);
+    console.log("userpattern: "+userpattern);
+    console.log("tempArray: "+tempArray);
+    
+    if ((JSON.stringify(tempArray)===JSON.stringify(userpattern))) {
+        console.log("trueV")
+        return true;
+    } else {
+        console.log("falseM")
+        return false;
+    }
+    
 }
